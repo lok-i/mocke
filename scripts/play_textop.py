@@ -1,6 +1,6 @@
 """Play the frozen textop WBC tracking a motion clip in mjlab (base only).
 
-Builds the Mock-Tracking-Textop-G1 play env and runs the ported checkpoint
+Builds the Mocke-Tracking-Textop-G1 play env and runs the ported checkpoint
 deterministically. Needs the lok-i/rsl_rl fork in the env (ModularNormMLP).
 
 Usage:
@@ -19,8 +19,8 @@ from mjlab.rl import RslRlVecEnvWrapper
 from mjlab.viewer import NativeMujocoViewer, ViserPlayViewer
 from rsl_rl.models import ModularNormMLPWithAdapterModel
 
-from mock import PRETRAINED_DIR, default_motion_file
-from mock.textop.env_cfg import textop_tracking_env_cfg
+from mocke import PRETRAINED_DIR, default_motion_file
+from mocke.textop.env_cfg import textop_tracking_env_cfg
 
 _DEFAULT_CKPT = PRETRAINED_DIR / "textop/model_75000_ported.pt"
 # Frozen base arch (must match the ckpt).

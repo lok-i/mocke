@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 import torch
 from mjlab.envs.mdp.actions import JointPositionAction, JointPositionActionCfg
 
-from mock.mdp.joint_maps import IL2MJ as _IL2MJ
+from mocke.mdp.joint_maps import IL2MJ as _IL2MJ
 
 __all__ = ["JointPositionActionILCfg", "JointPositionActionIL"]
 

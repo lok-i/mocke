@@ -5,7 +5,7 @@ Extracts the g1-mode pipeline (g1 encoder -> FSQ -> g1_dyn decoder) from
 the first/last linear layers, so the runtime model consumes observations and
 emits actions in mjlab (MuJoCo XML) joint order with no runtime converters.
 
-Layout contract (must match src/mock/sonic/mdp/observations.py):
+Layout contract (must match src/mocke/sonic/mdp/observations.py):
 
   tokenizer (640) = cat([jp_mf.flat(290) | jv_mf.flat(290)]).reshape(10, 58)
                     cat ori_mf(10, 6) -> flatten          # SONIC op-chain, verbatim

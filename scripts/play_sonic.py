@@ -1,6 +1,6 @@
 """Play the frozen SONIC base WBC tracking a motion clip in mjlab (base only).
 
-Builds the Mock-Tracking-Sonic-G1 play env and runs the ported checkpoint
+Builds the Mocke-Tracking-Sonic-G1 play env and runs the ported checkpoint
 (scripts/port_sonic_checkpoint.py output) deterministically. Needs the
 lok-i/rsl_rl fork in the env (SonicBaseModel).
 
@@ -20,8 +20,8 @@ from mjlab.rl import RslRlVecEnvWrapper
 from mjlab.viewer import NativeMujocoViewer, ViserPlayViewer
 from rsl_rl.models import SonicBaseModel
 
-from mock import PRETRAINED_DIR, default_motion_file
-from mock.sonic.env_cfg import sonic_tracking_env_cfg
+from mocke import PRETRAINED_DIR, default_motion_file
+from mocke.sonic.env_cfg import sonic_tracking_env_cfg
 
 _DEFAULT_CKPT = PRETRAINED_DIR / "sonic/last_ported.pt"
 

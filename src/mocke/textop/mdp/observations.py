@@ -3,7 +3,7 @@
 Duck-typed on the shared future-window command interface
 (``motion_anchor_{pos,quat}_w_future``, ``motion_joint_{pos,vel}_future``,
 ``robot_anchor_{pos,quat}_w``) — served by both
-``mock.mdp.FutureMotionCommand`` (pure tracking) and consumer-side commands
+``mocke.mdp.FutureMotionCommand`` (pure tracking) and consumer-side commands
 (e.g. vibe's ``OmniObjectMotionCommand``).
 """
 
@@ -13,7 +13,7 @@ import torch
 from mjlab.envs import ManagerBasedRlEnv
 from mjlab.utils.lab_api.math import matrix_from_quat, subtract_frame_transforms
 
-from mock.mdp.joint_maps import MJ2IL as _MJ2IL  # noqa: F401 — re-exported
+from mocke.mdp.joint_maps import MJ2IL as _MJ2IL  # noqa: F401 — re-exported
 
 __all__ = [
     "generated_commands_il",

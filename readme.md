@@ -1,16 +1,16 @@
-# mock
+# mocke
 
 Frozen-WBC tracking plumbing for mjlab G1 projects — shared library, no dataset.
 
-- `src/mock/mdp/` — canonical IL↔MJ joint/body maps, IL-remapping `MjMotionLoader`,
+- `src/mocke/mdp/` — canonical IL↔MJ joint/body maps, IL-remapping `MjMotionLoader`,
   `FutureMotionCommand` (future-window accessor; `il_ordered=False` for MJ-native clips)
-- `src/mock/{textop,sonic}/profile.py` — the WBC contract: `policy_obs_terms()` +
+- `src/mocke/{textop,sonic}/profile.py` — the WBC contract: `policy_obs_terms()` +
   `extra_obs_groups()` + `robot_cfg(base=None)` + `action_cfg()`; consumers assemble
   their own envs from these (pass a custom EntityCfg as `base` to override the robot)
-- `src/mock/{textop,sonic}/env_cfg.py` — pure tracking sandbox factories
+- `src/mocke/{textop,sonic}/env_cfg.py` — pure tracking sandbox factories
 - `pretrained/` — ported base checkpoints (textop `model_75000_ported.pt`,
   sonic `last_ported.pt`); git-tracked, so any consumer repo gets them on sync
-- registers `Mock-Tracking-{Textop,Sonic}-G1` (play-only sandboxes) against
+- registers `Mocke-Tracking-{Textop,Sonic}-G1` (play-only sandboxes) against
   mjlab's cached demo clip; auto-skips offline
 
 ## Install
@@ -34,5 +34,5 @@ python scripts/port_sonic_checkpoint.py    # HF download -> pretrained/sonic/las
 
 ## List registered tasks
 ```bash
-python -c "import mock; from mjlab.tasks.registry import list_tasks; print('\n'.join(list_tasks()))"
+python -c "import mocke; from mjlab.tasks.registry import list_tasks; print('\n'.join(list_tasks()))"
 ```

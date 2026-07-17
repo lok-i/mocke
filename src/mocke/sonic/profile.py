@@ -17,7 +17,7 @@ from mjlab.envs.mdp.actions import JointPositionActionCfg
 from mjlab.managers.observation_manager import ObservationGroupCfg, ObservationTermCfg
 from mjlab.utils.noise import UniformNoiseCfg as Unoise
 
-from mock.sonic import mdp
+from mocke.sonic import mdp
 
 HISTORY = 10
 """Proprio history length the decoder was trained with."""

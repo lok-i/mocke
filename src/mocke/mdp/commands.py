@@ -17,7 +17,7 @@ import torch
 from mjlab.envs import ManagerBasedRlEnv
 from mjlab.tasks.tracking.mdp.commands import MotionCommand, MotionCommandCfg
 
-from mock.mdp.joint_maps import G1_TRACKED_BODIES, IL2MJ
+from mocke.mdp.joint_maps import G1_TRACKED_BODIES, IL2MJ
 
 
 class MjMotionLoader:

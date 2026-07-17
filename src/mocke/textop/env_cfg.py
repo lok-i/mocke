@@ -11,9 +11,9 @@ from mjlab.envs import ManagerBasedRlEnvCfg
 from mjlab.managers.observation_manager import ObservationGroupCfg, ObservationTermCfg
 from mjlab.tasks.tracking.tracking_env_cfg import make_tracking_env_cfg
 
-from mock import g1_env
-from mock.mdp import G1_TRACKED_BODY_NAMES, FutureMotionCommandCfg
-from mock.textop import mdp, profile
+from mocke import g1_env
+from mocke.mdp import G1_TRACKED_BODY_NAMES, FutureMotionCommandCfg
+from mocke.textop import mdp, profile
 
 
 def _critic_obs_terms(command_name: str) -> dict[str, ObservationTermCfg]:

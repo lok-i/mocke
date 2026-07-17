@@ -1,8 +1,8 @@
 """Frozen-WBC tracking library + sandbox tasks (no object, no dataset).
 
-Registers Mock-Tracking-{Textop,Sonic}-G1 against mjlab's cached demo clip
+Registers Mocke-Tracking-{Textop,Sonic}-G1 against mjlab's cached demo clip
 (MJ-native npz -> il_ordered=False). Consumers compose their own envs from
-mock.{textop,sonic}.profile and mock.mdp; ported base checkpoints ship in
+mocke.{textop,sonic}.profile and mocke.mdp; ported base checkpoints ship in
 <repo>/pretrained (see PRETRAINED_DIR).
 """
 
@@ -27,12 +27,12 @@ def _register() -> None:
     motion = default_motion_file()
     if not motion:
         return
-    from mock.sonic.env_cfg import sonic_tracking_env_cfg
-    from mock.textop.env_cfg import textop_tracking_env_cfg
+    from mocke.sonic.env_cfg import sonic_tracking_env_cfg
+    from mocke.textop.env_cfg import textop_tracking_env_cfg
 
     for task_id, factory in (
-        ("Mock-Tracking-Textop-G1", textop_tracking_env_cfg),
-        ("Mock-Tracking-Sonic-G1", sonic_tracking_env_cfg),
+        ("Mocke-Tracking-Textop-G1", textop_tracking_env_cfg),
+        ("Mocke-Tracking-Sonic-G1", sonic_tracking_env_cfg),
     ):
         register_mjlab_task(
             task_id=task_id,

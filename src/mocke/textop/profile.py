@@ -12,9 +12,9 @@ from mjlab.managers.observation_manager import ObservationTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.utils.noise import UniformNoiseCfg as Unoise
 
-from mock.mdp.joint_maps import MJ2IL
-from mock.textop import mdp
-from mock.textop.mdp import JointPositionActionILCfg
+from mocke.mdp.joint_maps import MJ2IL
+from mocke.textop import mdp
+from mocke.textop.mdp import JointPositionActionILCfg
 
 FUTURE_STEPS = 5
 """Reference lookahead the WBC was trained with (consecutive frames)."""
