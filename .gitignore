@@ -7,3 +7,6 @@ wandb/
 logs/
 *.onnx
 *.npz
+
+# 447MB GEAR-SONIC source ckpt (auto-downloaded by scripts/port_sonic_checkpoint.py)
+pretrained/sonic/last.pt

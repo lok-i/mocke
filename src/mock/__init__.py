@@ -1,37 +1,45 @@
-# mock — mjlab task package
-#
-# mjlab imports this file at startup (via the entry-point in pyproject.toml).
-# Call register_mjlab_task() once per task you want to expose.
-#
-# ── single-task project ────────────────────────────────────────────────────────
-# import mjlab.tasks
-# import mjlab.rl
-# from mock.env_cfg import train_cfg, play_cfg
-#
-# mjlab.tasks.register_mjlab_task(
-#     task_id="Mjlab-MyTask",           # string used with train / play CLI
-#     env_cfg=train_cfg(),              # ManagerBasedRlEnvCfg for training
-#     play_env_cfg=play_cfg(),          # same but DR off, fewer envs
-#     rl_cfg=mjlab.rl.RslRlOnPolicyRunnerCfg(
-#         experiment_name="mock",   # groups runs in wandb / logs/
-#     ),
-#     runner_cls=None,                  # None -> default MjlabOnPolicyRunner
-# )
-#
-# ── multi-task project (e.g. mjlab_playground style) ──────────────────────────
-# import mjlab.tasks
-# import mjlab.rl
-# from mock.task_a.env_cfg import train_cfg as a_train, play_cfg as a_play
-# from mock.task_b.env_cfg import train_cfg as b_train, play_cfg as b_play
-#
-# for task_id, train_fn, play_fn in [
-#     ("Mjlab-TaskA", a_train, a_play),
-#     ("Mjlab-TaskB", b_train, b_play),
-# ]:
-#     mjlab.tasks.register_mjlab_task(
-#         task_id=task_id,
-#         env_cfg=train_fn(),
-#         play_env_cfg=play_fn(),
-#         rl_cfg=mjlab.rl.RslRlOnPolicyRunnerCfg(experiment_name=task_id),
-#         runner_cls=None,
-#     )
+"""Frozen-WBC tracking library + sandbox tasks (no object, no dataset).
+
+Registers Mock-Tracking-{Textop,Sonic}-G1 against mjlab's cached demo clip
+(MJ-native npz -> il_ordered=False). Consumers compose their own envs from
+mock.{textop,sonic}.profile and mock.mdp; ported base checkpoints ship in
+<repo>/pretrained (see PRETRAINED_DIR).
+"""
+
+from pathlib import Path
+
+from mjlab.tasks.registry import register_mjlab_task
+from mjlab.tasks.tracking.config.g1.rl_cfg import unitree_g1_tracking_ppo_runner_cfg
+
+PRETRAINED_DIR = Path(__file__).resolve().parents[2] / "pretrained"
+
+
+def default_motion_file() -> str:
+    """mjlab's GCS demo clip (downloaded once, sha-verified cache); "" offline."""
+    try:
+        from mjlab.scripts.gcs import ensure_default_motion
+        return str(ensure_default_motion())
+    except Exception:
+        return ""
+
+
+def _register() -> None:
+    motion = default_motion_file()
+    if not motion:
+        return
+    from mock.sonic.env_cfg import sonic_tracking_env_cfg
+    from mock.textop.env_cfg import textop_tracking_env_cfg
+
+    for task_id, factory in (
+        ("Mock-Tracking-Textop-G1", textop_tracking_env_cfg),
+        ("Mock-Tracking-Sonic-G1", sonic_tracking_env_cfg),
+    ):
+        register_mjlab_task(
+            task_id=task_id,
+            env_cfg=factory(motion_file=motion, il_ordered=False),
+            play_env_cfg=factory(motion_file=motion, play=True, il_ordered=False),
+            rl_cfg=unitree_g1_tracking_ppo_runner_cfg(),  # placeholder (play-only sandboxes)
+        )
+
+
+_register()

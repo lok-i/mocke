@@ -1,0 +1,9 @@
+{
+    "rsl_rl": {
+        "url": "git@github.com:lok-i/rsl_rl.git",
+        "sha": "03fcd551b59c7868b9449cab01aa7871827a8b95",
+        "path": "dependencies/rsl_rl",
+        "pip_install": true,
+        "lfs": false
+    }
+}
