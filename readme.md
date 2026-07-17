@@ -15,10 +15,12 @@ Frozen-WBC tracking plumbing for mjlab G1 projects — shared library, no datase
 
 ## Install
 ```bash
-pip install -e .
+bash scripts/setup/install.sh
 ```
-Play/port scripts additionally need the `lok-i/rsl_rl` fork in the env
-(the package itself depends on mjlab only).
+`pip install -e .` + the `lok-i/rsl_rl` fork pin (`[tool.mocke]` in pyproject.toml, SSH).
+The fork can't live in `[project.dependencies]` (mjlab pins PyPI `rsl-rl-lib==5.4.0`,
+resolver conflict); the script installs it `--no-deps` — and leaves the env's rsl_rl
+alone when it's a checkout already containing the pinned SHA (equal or newer).
 
 ## Play the sandboxes
 ```bash

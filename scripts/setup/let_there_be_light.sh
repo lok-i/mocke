@@ -28,11 +28,11 @@
 # Import names to expose live in CANDIDATES — extend as the project grows.
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PY="${PYTHON:-python}"
 
 # import names whose source trees Claude should read / VSCode should jump to
-CANDIDATES="mjlab smp rsl_rl"
+CANDIDATES="mjlab rsl_rl"
 
 # machine-agnostic Claude rules (tracked settings.json):
 # relative dep/data reads + a minimal, durable dev baseline (no abs paths).

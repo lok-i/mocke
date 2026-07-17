@@ -39,6 +39,13 @@ mocke = "mocke"
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.4"]
 
+# lok-i/rsl_rl fork pin (SonicBaseModel, ModularNormMLP*) — single source of the SHA.
+# Deliberately NOT in [project.dependencies]: mjlab pins rsl-rl-lib==5.4.0 from PyPI
+# while the fork reports 5.4.1, so pip co-resolution is impossible. Install it as a
+# second, unresolved step (see readme) — same scheme vibe's sync uses.
+[tool.mocke]
+rsl_rl = "rsl-rl-lib @ git+ssh://git@github.com/lok-i/rsl_rl.git@ff4a97793fcf25a8b9623ea7c0dd923927f68ff4"
+
 [tool.ruff]
 src = ["src"]
 indent-width = 4
