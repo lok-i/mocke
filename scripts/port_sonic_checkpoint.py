@@ -150,6 +150,52 @@ def permute_in_columns(weight: torch.Tensor, src: torch.Tensor) -> torch.Tensor:
     return out
 
 
+def port_smpl_encoder(
+    policy: dict, decoder_state: dict, std: torch.Tensor, out_path: Path
+) -> None:
+    """Extract the smpl encoder (no permutation — SMPL-space inputs, wrist
+    column order owned by mocke.sonic.mdp.SMPL_WRIST_MJ_IDX) and pair it with
+    the already-permuted decoder into a second ported file.
+
+    Input layout contract (mocke.sonic.mdp.sonic_smpl_tokenizer): per-frame
+    [joints_local(72) | root_ori_6d(6) | wrist(6)] x 10 frames @ 0.02 s = 840.
+    """
+    prefix = "actor_module.encoders.smpl.module."
+    enc = {k.replace(prefix, "encoder."): v.clone()
+           for k, v in policy.items() if k.startswith(prefix)}
+    assert enc, f"no smpl encoder in checkpoint (missing '{prefix}*' keys)"
+
+    state = {**enc, **{k: v for k, v in decoder_state.items() if k.startswith("decoder.")}}
+
+    # verify: renamed keys reconstruct a well-formed _mlp (strict load)
+    from rsl_rl.models.sonic_base_model import _mlp
+
+    in_dim = enc["encoder.0.weight"].shape[1]
+    layer_w = sorted(
+        int(k.split(".")[1]) for k in enc if k.endswith(".weight"))
+    hidden = tuple(enc[f"encoder.{i}.weight"].shape[0] for i in layer_w[:-1])
+    out_dim = enc[f"encoder.{layer_w[-1]}.weight"].shape[0]
+    _mlp(in_dim, hidden, out_dim, "SiLU").load_state_dict(
+        {k.replace("encoder.", ""): v for k, v in enc.items()})
+    print(f"[port] smpl encoder: {in_dim} -> {list(hidden)} -> {out_dim} (no permutation)")
+
+    torch.save(
+        {
+            "model_state_dict": state,
+            "meta": {
+                "encoder_mode": "smpl",
+                "action_std": std,
+                "num_future_frames": 10,
+                "future_dt": 0.02,
+                "tokenizer_dim": in_dim,
+                "per_frame_layout": "joints_local(72)|root_ori_6d(6)|wrist(6)",
+            },
+        },
+        out_path,
+    )
+    print(f"[port] saved: {out_path}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -157,6 +203,11 @@ def main() -> None:
     )
     parser.add_argument(
         "--out", default=str(_REPO_ROOT / "pretrained/sonic/last_ported.pt")
+    )
+    parser.add_argument(
+        "--smpl", action="store_true",
+        help="also port the smpl encoder -> pretrained/sonic/smpl_ported.pt "
+             "(untracked; smpl encoder + the same permuted decoder)",
     )
     args = parser.parse_args()
 
@@ -276,6 +327,11 @@ def main() -> None:
         out_path,
     )
     print(f"[port] saved: {out_path}")
+
+    if args.smpl:
+        port_smpl_encoder(
+            policy, state, std, out_path.parent / "smpl_ported.pt"
+        )
 
 
 if __name__ == "__main__":

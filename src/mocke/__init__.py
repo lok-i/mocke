@@ -8,10 +8,15 @@ mocke.{textop,sonic}.profile and mocke.mdp; ported base checkpoints ship in
 
 from pathlib import Path
 
-from mjlab.tasks.registry import register_mjlab_task
-from mjlab.tasks.tracking.config.g1.rl_cfg import unitree_g1_tracking_ppo_runner_cfg
-
 PRETRAINED_DIR = Path(__file__).resolve().parents[2] / "pretrained"
+# NOTE: PRETRAINED_DIR must precede the mjlab imports — mjlab's task discovery
+# imports consumer packages that do `from mocke import PRETRAINED_DIR`, so the
+# name must exist before this module re-enters via mjlab.
+
+from mjlab.tasks.registry import register_mjlab_task  # noqa: E402
+from mjlab.tasks.tracking.config.g1.rl_cfg import (  # noqa: E402
+    unitree_g1_tracking_ppo_runner_cfg,
+)
 
 
 def default_motion_file() -> str:

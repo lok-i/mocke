@@ -41,13 +41,21 @@ def policy_obs_terms(noisy: bool = False) -> dict[str, ObservationTermCfg]:
     }
 
 
-def extra_obs_groups(command_name: str = "motion") -> dict[str, ObservationGroupCfg]:
-    """The g1-encoder input: 10 future ref frames @ 0.1 s, own obs group."""
+def extra_obs_groups(
+    command_name: str = "motion", mode: str = "g1"
+) -> dict[str, ObservationGroupCfg]:
+    """The tokenizer-encoder input, own obs group.
+
+    mode="g1":   10 future G1 ref frames @ 0.1 s (last_ported.pt encoder).
+    mode="smpl": 10 future SMPL frames @ 0.02 s (smpl_ported.pt encoder) —
+                 same group name, so the same SonicBaseModel wiring serves both.
+    """
+    term = {"g1": mdp.sonic_g1_tokenizer, "smpl": mdp.sonic_smpl_tokenizer}[mode]
     return {
         "tokenizer": ObservationGroupCfg(
             terms={
-                "g1_tokenizer": ObservationTermCfg(
-                    func=mdp.sonic_g1_tokenizer, params={"command_name": command_name}
+                f"{mode}_tokenizer": ObservationTermCfg(
+                    func=term, params={"command_name": command_name}
                 ),
             },
             concatenate_terms=True,

@@ -6,4 +6,7 @@ from mocke.mdp import (  # noqa: F401
     FutureMotionCommand,
     FutureMotionCommandCfg,
 )
-from mocke.sonic.mdp.observations import sonic_g1_tokenizer  # noqa: F401
+from mocke.sonic.mdp.observations import (  # noqa: F401
+    sonic_g1_tokenizer,
+    sonic_smpl_tokenizer,
+)

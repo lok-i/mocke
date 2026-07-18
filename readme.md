@@ -32,6 +32,7 @@ python scripts/play_sonic.py  --motion clip.npz --il_ordered   # IL-ordered data
 ## Port the SONIC release checkpoint
 ```bash
 python scripts/port_sonic_checkpoint.py    # HF download -> pretrained/sonic/last_ported.pt
+python scripts/port_sonic_checkpoint.py --smpl  # + pretrained/sonic/smpl_ported.pt (untracked — run once per checkout)
 ```
 
 ## List registered tasks
