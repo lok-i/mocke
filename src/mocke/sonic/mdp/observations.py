@@ -89,9 +89,10 @@ def sonic_smpl_tokenizer(
     smpl-root frame; root ori = 6D of quat_inv(robot_root) * smpl_root; wrist
     refs = the retargeted G1 wrist joint targets (zeros when unavailable).
 
-    Requires ``command.motion`` to carry ``smpl_joints (T, 24, 3)`` and
-    ``smpl_root_quat (T, 4)`` — z-up, wxyz, SMPL base rot removed (the
-    "retargeted PKL" tier of gear_sonic's convention table).
+    Requires ``command.motion`` to carry ``smpl_joints (T, 24, 3)`` RAW as in
+    SONIC's smpl pkl (y-up, root-centered, no transl — the motion lib never
+    converts joints, only the root quat) and ``smpl_root_quat (T, 4)`` z-up,
+    wxyz, SMPL base rot removed.
     """
     command = env.command_manager.get_term(command_name)
     num_envs = env.num_envs
