@@ -18,6 +18,3 @@ pretrained/sonic/last.pt
 .claude/settings.json
 .claude/settings.local.json
 .vscode/settings.json
-
-# smpl encoder port (untracked; regenerate: python scripts/port_sonic_checkpoint.py --smpl)
-pretrained/sonic/smpl_ported.pt
