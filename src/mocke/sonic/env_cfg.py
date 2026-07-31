@@ -17,9 +17,15 @@ from mocke.sonic import profile
 
 
 def sonic_tracking_env_cfg(
-    motion_file: str, play: bool = False, il_ordered: bool = True
+    motion_file: str, play: bool = False, il_ordered: bool = True,
+    adapter: bool = False,
 ) -> ManagerBasedRlEnvCfg:
-    """G1 SONIC tracking env config."""
+    """G1 SONIC tracking env config.
+
+    adapter=True adds the ``augmentation`` obs group (the adapter stream for
+    SonicWithAdapterModel): one ``motion_cmd`` term = FutureMotionCommand.command,
+    the future [jp | jv] window at cfg.future_steps / future_frame_skip.
+    """
     cfg = make_tracking_env_cfg()
 
     robot = profile.robot_cfg()
@@ -49,6 +55,20 @@ def sonic_tracking_env_cfg(
         ),
         **profile.extra_obs_groups("motion"),
     }
+
+    if adapter:
+        from mjlab.envs.mdp.observations import generated_commands
+        from mjlab.managers.observation_manager import ObservationTermCfg
+
+        cfg.observations["augmentation"] = ObservationGroupCfg(
+            terms={
+                "motion_cmd": ObservationTermCfg(
+                    func=generated_commands, params={"command_name": "motion"}
+                ),
+            },
+            concatenate_terms=True,
+            enable_corruption=False,
+        )
 
     g1_env.wire_g1(cfg)
     if play:

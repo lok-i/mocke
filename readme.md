@@ -29,6 +29,17 @@ python scripts/play_sonic.py  --num_envs 1          # frozen SONIC base, demo cl
 python scripts/play_sonic.py  --motion clip.npz --il_ordered   # IL-ordered dataset clip
 ```
 
+## Export SONIC for deployment (vibe.onnx.v1)
+```bash
+python scripts/export_sonic_onnx.py                      # base SONIC -> g1_sonic_base.onnx + .manifest.json
+python scripts/export_sonic_onnx.py --adapter --rank 16  # + ZERO-INIT LoRA -> g1_sonic_adapter0.*
+```
+Self-contained graph (normalizers, FSQ, LoRA folded) + per-port term manifest,
+open-loop parity-gated against the torch checkpoint in the live env. Consumed by
+`cpp_control`'s `g1_sonic_node` (ports bound by name from the manifest). Artifacts
+land next to the checkpoint unless `--output-dir`. Requires vibe in the env
+(manifest schema owner) until the exporter migrates here.
+
 ## Port the SONIC release checkpoint
 ```bash
 python scripts/port_sonic_checkpoint.py    # HF download -> pretrained/sonic/last_ported.pt
