@@ -1,9 +1,9 @@
 """Export the frozen SONIC base (or SONIC + zero-init LoRA adapter) to ONNX + manifest.
 
-The tracking twin of vibe's `export-onnx`: same artifact contract (vibe.onnx.v1 —
+The tracking twin of vibe's `export-agent`: same artifact contract (vibe.onnx.v1 —
 self-contained graph, manifest in a sibling .json AND in the onnx metadata), but built
 directly like play_sonic.py — no runner, no wandb, no repose dataset plumbing. The
-manifest builder and the OnnxAgent parity harness are imported from vibe.deploy (the
+manifest builder and the OnnxAgent parity harness are imported from vibe.export (the
 schema owner) until the exporter migrates here.
 
 The parity gate mirrors vibe's open-loop check: the torch checkpoint drives the env;
@@ -58,8 +58,8 @@ def main() -> None:
     args = parser.parse_args()
 
     # Schema owner (see module docstring) — hard requirement, soft import.
-    from vibe.deploy.onnx_agent import OnnxAgent
-    from vibe.deploy.onnx_manifest import build_manifest
+    from vibe.export.agent.onnx_agent import OnnxAgent
+    from vibe.export.manifest import build_manifest
 
     motion = args.motion or default_motion_file()
     assert motion, "no motion clip found — pass --motion"
