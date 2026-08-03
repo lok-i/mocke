@@ -90,9 +90,17 @@ def sonic_smpl_tokenizer(
     refs = the retargeted G1 wrist joint targets (zeros when unavailable).
 
     Requires ``command.motion`` to carry ``smpl_joints (T, 24, 3)`` RAW as in
-    SONIC's smpl pkl (y-up, root-centered, no transl — the motion lib never
-    converts joints, only the root quat) and ``smpl_root_quat (T, 4)`` z-up,
-    wxyz, SMPL base rot removed.
+    SONIC's smpl pkl (**z-up**, root-centered, no transl — the motion lib
+    never converts joints, only the root quat) and ``smpl_root_quat (T, 4)``
+    z-up, wxyz, SMPL base rot removed.
+
+    **Both z-up, and that is load-bearing.** The op-chain below is
+    ``quat_apply_inverse(root_q, joints)``, so a frame mismatch does not error —
+    it silently redefines the leading 72 dims as a body frame that rotates with
+    heading. gear_sonic's ``smpl_y_up`` flag converts the ROOT ONLY
+    (``motion_lib_base.py`` loads ``smpl_joints`` untouched), so a pkl with a
+    y-up ``pose_aa`` still ships z-up joints. Zero-shot tracking reward on 63
+    GRAIL curb clips: z-up **4.735** vs y-up **0.348** (g1 encoder 5.677).
     """
     command = env.command_manager.get_term(command_name)
     num_envs = env.num_envs
