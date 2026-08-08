@@ -37,6 +37,7 @@ where = ["src"]
 mocke = "mocke"
 
 [project.optional-dependencies]
+export = ["onnxruntime"]
 dev = ["pytest>=8.0", "ruff>=0.4"]
 
 # lok-i/rsl_rl fork pin (SonicBaseModel, ModularNormMLP*) — single source of the SHA.

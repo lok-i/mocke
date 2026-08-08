@@ -60,6 +60,7 @@ Ported textop and SONIC checkpoints live under `pretrained/`.
 Export either frozen controller to ONNX and run the two-world parity check:
 
 ```bash
+pip install -e ".[export]"
 python scripts/export_onnx.py sonic
 python scripts/export_onnx.py textop
 python scripts/export_onnx.py sonic --adapter --rank 16

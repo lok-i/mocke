@@ -124,4 +124,3 @@ def build_manifest(
             "rsl_rl": _git_sha(Path(rsl_rl.__file__).resolve().parent),
         },
     }
-

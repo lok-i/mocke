@@ -6,6 +6,7 @@ build/
 wandb/
 logs/
 *.onnx
+*.manifest.json
 *.npz
 
 # 447MB GEAR-SONIC source ckpt (auto-downloaded by scripts/port_sonic_checkpoint.py)
