@@ -1,52 +1,99 @@
 # mocke
 
-Frozen-WBC tracking plumbing for mjlab G1 projects — shared library, no dataset.
+mock implementations of pre-trained whole-body tracker recipes in `mjlab`.
 
-- `src/mocke/mdp/` — canonical IL↔MJ joint/body maps, IL-remapping `MjMotionLoader`,
-  `FutureMotionCommand` (future-window accessor; `il_ordered=False` for MJ-native clips)
-- `src/mocke/{textop,sonic}/profile.py` — the WBC contract: `policy_obs_terms()` +
-  `extra_obs_groups()` + `robot_cfg(base=None)` + `action_cfg()`; consumers assemble
-  their own envs from these (pass a custom EntityCfg as `base` to override the robot)
-- `src/mocke/{textop,sonic}/env_cfg.py` — pure tracking sandbox factories
-- `pretrained/` — ported base checkpoints (textop `model_75000_ported.pt`,
-  sonic `last_ported.pt`); git-tracked, so any consumer repo gets them on sync
-- registers `Mocke-Tracking-{Textop,Sonic}-G1` (play-only sandboxes) against
-  mjlab's cached demo clip; auto-skips offline
+`mocke` recreates the MDP contracts needed to train and run G1 whole-body
+controllers:
 
-## Install
+- flat-ground tracking from standard `motion.npz` clips
+- command conditioning and future reference windows
+- checkpoint-compatible observation and action layouts
+- Isaac Lab ↔ MuJoCo joint and body mappings
+- play-only environments for checking frozen controllers
+
+## install
+
+Requires Python 3.10+ and GitHub SSH access for the pinned `rsl_rl` fork.
+
 ```bash
 bash scripts/setup/install.sh
 ```
-`pip install -e .` + the `lok-i/rsl_rl` fork pin (`[tool.mocke]` in pyproject.toml, SSH).
-The fork can't live in `[project.dependencies]` (mjlab pins PyPI `rsl-rl-lib==5.4.0`,
-resolver conflict); the script installs it `--no-deps` — and leaves the env's rsl_rl
-alone when it's a checkout already containing the pinned SHA (equal or newer).
 
-## Play the sandboxes
+## play
+
+Run either frozen controller on the cached `mjlab` demo clip:
+
 ```bash
-python scripts/play_textop.py --num_envs 1          # frozen textop base, demo clip
-python scripts/play_sonic.py  --num_envs 1          # frozen SONIC base, demo clip
-python scripts/play_sonic.py  --motion clip.npz --il_ordered   # IL-ordered dataset clip
+python scripts/play_textop.py --num_envs 1
+python scripts/play_sonic.py --num_envs 1
 ```
 
-## Export SONIC for deployment (vibe.onnx.v1)
-```bash
-python scripts/export_sonic_onnx.py                      # base SONIC -> g1_sonic_base.onnx + .manifest.json
-python scripts/export_sonic_onnx.py --adapter --rank 16  # + ZERO-INIT LoRA -> g1_sonic_adapter0.*
-```
-Self-contained graph (normalizers, FSQ, LoRA folded) + per-port term manifest,
-open-loop parity-gated against the torch checkpoint in the live env. Consumed by
-`cpp_control`'s `g1_sonic_node` (ports bound by name from the manifest). Artifacts
-land next to the checkpoint unless `--output-dir`. Requires vibe in the env
-(manifest schema owner) until the exporter migrates here.
+Use `--il_ordered` only when a custom clip follows Isaac Lab joint order:
 
-## Port the SONIC release checkpoint
 ```bash
-python scripts/port_sonic_checkpoint.py    # HF download -> pretrained/sonic/last_ported.pt
-python scripts/port_sonic_checkpoint.py --smpl  # regenerate pretrained/sonic/smpl_ported.pt (tracked; only needed if the port changes)
+python scripts/play_sonic.py --motion path/to/motion.npz --il_ordered
 ```
 
-## List registered tasks
+## library surface
+
+- `mocke.mdp` — joint maps, motion loading, and future-motion commands
+- `mocke.textop.profile` — textop observation, robot, and action contract
+- `mocke.sonic.profile` — SONIC observation, robot, and action contract
+- `mocke.{textop,sonic}.env_cfg` — flat-ground tracking environment factories
+
+Observation order, action order, and future-window shape are checkpoint
+contracts.
+
+## checkpoints
+
+Port the public SONIC release checkpoint to the native `mjlab` layout:
+
+```bash
+python scripts/port_sonic_checkpoint.py
+python scripts/port_sonic_checkpoint.py --smpl
+```
+
+Ported textop and SONIC checkpoints live under `pretrained/`.
+
+## export
+
+Export either frozen controller to ONNX and run the two-world parity check:
+
+```bash
+python scripts/export_onnx.py sonic
+python scripts/export_onnx.py textop
+python scripts/export_onnx.py sonic --adapter --rank 16
+python scripts/export_onnx.py sonic --viewer native
+```
+
+World 0 runs PyTorch and gates ONNX on the same observations. World 1 runs ONNX
+closed-loop. Artifacts are kept only when both checks pass. Use `--output-dir`
+to choose the artifact directory. With `--viewer native`, the visible rollout
+is the check: results print at `--check-steps`, then playback continues.
+
+## tasks
+
+Importing `mocke` registers two play-only tasks when the demo clip is available:
+
+- `Mocke-Tracking-Textop-G1`
+- `Mocke-Tracking-Sonic-G1`
+
 ```bash
 python -c "import mocke; from mjlab.tasks.registry import list_tasks; print('\n'.join(list_tasks()))"
 ```
+
+## supported recipes
+
+- `textop` — TextOpTracker with Isaac Lab-ordered observations and actions
+- `sonic` — SONIC with MuJoCo-ordered observations and actions
+
+Datasets and task-specific robot logic are outside this package.
+
+## acknowledgements
+
+*"standing on the shoulders of giants"*
+
+1. [SONIC](https://github.com/NVlabs/GR00T-WholeBodyControl)
+2. [Textop](https://github.com/TeleHuman/Textop)
+3. [mjlab](https://github.com/mujocolab/mjlab)
+4. [RSL-RL](https://github.com/leggedrobotics/rsl_rl) framework
