@@ -117,6 +117,6 @@ The complete scope, attribution, and redistributed license texts are in
 
 ## License
 
-Copyright 2026 Lokesh Krishna (`lkrajan@usc.edu`). Mocke's original material is
+Mocke's original material is
 available under the [BSD 3-Clause License](LICENSE). Third-party components are
 excluded from that grant and remain under the terms listed above.
