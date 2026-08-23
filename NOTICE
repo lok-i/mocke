@@ -1,0 +1,8 @@
+Mocke
+Copyright 2026 Lokesh Krishna <lkrajan@usc.edu>
+
+Mocke's original code and documentation are licensed under BSD-3-Clause. This
+repository also contains implementations and model artifacts derived from
+third-party projects. Those components are not relicensed by Mocke; their
+copyright, attribution, and license terms are recorded in
+THIRD_PARTY_NOTICES.md and LICENSES/.

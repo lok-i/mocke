@@ -1,9 +1,12 @@
 [project]
 name = "mocke"
 version = "0.1.0"
-description = "mjlab project: mocke"
+description = "Minimal mjlab implementations of pretrained whole-body tracking recipes"
 readme = "readme.md"
 requires-python = ">=3.10"
+license = "BSD-3-Clause"
+license-files = ["LICENSE", "LICENSES/*", "NOTICE", "THIRD_PARTY_NOTICES.md"]
+authors = [{ name = "Lokesh Krishna", email = "lkrajan@usc.edu" }]
 dependencies = [
     # ── active ─────────────────────────────────────────────────────────────────
     "mjlab>=1.1.0",
@@ -23,7 +26,7 @@ dependencies = [
 ]
 
 [build-system]
-requires = ["setuptools>=42"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
