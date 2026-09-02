@@ -1,17 +1,17 @@
-# Mocke
+# mocke
 
-Minimal implementations of pretrained whole-body tracker recipes in `mjlab`.
+Minimal `mjlab` implementations of pretrained whole-body tracking recipes for
+G1.
 
-`mocke` recreates the MDP contracts needed to train and run G1 whole-body
-controllers:
+`mocke` provides the MDP contracts needed to train and run these controllers:
 
 - flat-ground tracking from standard `motion.npz` clips
-- command conditioning and future reference windows
+- future reference windows and command conditioning
 - checkpoint-compatible observation and action layouts
 - Isaac Lab ↔ MuJoCo joint and body mappings
 - play-only environments for checking frozen controllers
 
-## Install
+## install
 
 Requires Python 3.10+ and GitHub SSH access for the pinned `rsl_rl` fork.
 
@@ -19,7 +19,7 @@ Requires Python 3.10+ and GitHub SSH access for the pinned `rsl_rl` fork.
 bash scripts/setup/install.sh
 ```
 
-## Play
+## play
 
 Run either frozen controller on the cached `mjlab` demo clip:
 
@@ -34,17 +34,17 @@ Use `--il_ordered` only when a custom clip follows Isaac Lab joint order:
 python scripts/play_sonic.py --motion path/to/motion.npz --il_ordered
 ```
 
-## Library surface
+## library surface
 
 - `mocke.mdp` — joint maps, motion loading, and future-motion commands
-- `mocke.textop.profile` — textop observation, robot, and action contract
+- `mocke.textop.profile` — TextOp observation, robot, and action contract
 - `mocke.sonic.profile` — SONIC observation, robot, and action contract
 - `mocke.{textop,sonic}.env_cfg` — flat-ground tracking environment factories
 
-Observation order, action order, and future-window shape are checkpoint
-contracts.
+Observation order, action order, and future-window shape must match the
+checkpoint.
 
-## Checkpoints
+## checkpoints
 
 Port the public SONIC release checkpoint to the native `mjlab` layout:
 
@@ -53,11 +53,11 @@ python scripts/port_sonic_checkpoint.py
 python scripts/port_sonic_checkpoint.py --smpl
 ```
 
-Ported TextOp and SONIC checkpoints live under `pretrained/`. These checkpoints
-remain subject to their upstream licenses; see
+Ported TextOp and SONIC checkpoints live in `pretrained/` and retain their
+upstream licenses; see
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 
-## Export
+## export
 
 Export either frozen controller to ONNX and run the two-world parity check:
 
@@ -69,12 +69,12 @@ python scripts/export_onnx.py sonic --adapter --rank 16
 python scripts/export_onnx.py sonic --viewer native
 ```
 
-World 0 runs PyTorch and gates ONNX on the same observations. World 1 runs ONNX
+World 0 compares PyTorch and ONNX on the same observations. World 1 runs ONNX
 closed-loop. Artifacts are kept only when both checks pass. Use `--output-dir`
-to choose the artifact directory. With `--viewer native`, the visible rollout
-is the check: results print at `--check-steps`, then playback continues.
+to choose their directory. With `--viewer native`, results print at
+`--check-steps` and playback continues.
 
-## Tasks
+## tasks
 
 Importing `mocke` registers two play-only tasks when the demo clip is available:
 
@@ -85,28 +85,28 @@ Importing `mocke` registers two play-only tasks when the demo clip is available:
 python -c "import mocke; from mjlab.tasks.registry import list_tasks; print('\n'.join(list_tasks()))"
 ```
 
-## Supported recipes
+## supported recipes
 
 - `textop` — TextOpTracker with Isaac Lab-ordered observations and actions
 - `sonic` — SONIC with MuJoCo-ordered observations and actions
 
 Datasets and task-specific robot logic are outside this package.
 
-## Acknowledgements
+## acknowledgements
 
-Mocke builds on the published systems and open-source infrastructure of
+`mocke` builds on
 [SONIC](https://github.com/NVlabs/GR00T-WholeBodyControl),
 [TextOp](https://github.com/TeleHuman/TextOp),
 [mjlab](https://github.com/mujocolab/mjlab), and
-[RSL-RL](https://github.com/leggedrobotics/rsl_rl). Please cite the original
-research when using the corresponding recipe or checkpoint.
+[RSL-RL](https://github.com/leggedrobotics/rsl_rl). Please cite the relevant
+research when using a corresponding recipe or checkpoint.
 
-## Third-party code and models
+## third-party code and models
 
-Mocke's original code and documentation are BSD-3-Clause licensed. Adapted
+`mocke`'s original code and documentation are BSD-3-Clause licensed. Adapted
 implementations and bundled model artifacts retain their upstream terms:
 
-| Component | Upstream | Terms |
+| component | upstream | terms |
 |---|---|---|
 | SONIC-compatible implementation | [GR00T Whole-Body Control](https://github.com/NVlabs/GR00T-WholeBodyControl) | Apache-2.0 |
 | SONIC checkpoints and derivatives | [GEAR-SONIC](https://github.com/NVlabs/GR00T-WholeBodyControl) | NVIDIA Open Model License |
@@ -115,8 +115,8 @@ implementations and bundled model artifacts retain their upstream terms:
 The complete scope, attribution, and redistributed license texts are in
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) and [`LICENSES/`](LICENSES/).
 
-## License
+## license
 
-Mocke's original material is
-available under the [BSD 3-Clause License](LICENSE). Third-party components are
-excluded from that grant and remain under the terms listed above.
+`mocke`'s original material is available under the
+[BSD 3-Clause License](LICENSE). Third-party components are excluded from that
+grant and remain under the terms above.
