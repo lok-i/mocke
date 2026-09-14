@@ -48,7 +48,7 @@ dev = ["pytest>=8.0", "ruff>=0.4"]
 # while the fork reports 5.4.1, so pip co-resolution is impossible. Install it as a
 # second, unresolved step (see readme) — same scheme vibe's sync uses.
 [tool.mocke]
-rsl_rl = "rsl-rl-lib @ git+ssh://git@github.com/lok-i/rsl_rl.git@7a28369ae0295a232ff3dad9913e811ee87cf4d0"
+rsl_rl = "rsl-rl-lib @ git+ssh://git@github.com/lok-i/rsl_rl.git@215b6f4ceda569d2ca39df64dd679b9af15375cb"
 
 [tool.ruff]
 src = ["src"]
